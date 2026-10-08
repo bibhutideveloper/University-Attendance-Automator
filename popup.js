@@ -110,12 +110,29 @@ document.addEventListener('DOMContentLoaded', () => {
     setupShareListeners();
     setupReceiveListeners();
     setupSettingsListeners();
+    setupExternalLinks();
 
     // Check page for original attendance table
     await checkActivePage();
 
     // Restore any active room state from session storage
     await restoreSavedRoomStates();
+  }
+
+  function setupExternalLinks() {
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = link.getAttribute('href');
+        if (url) {
+          if (typeof chrome !== 'undefined' && chrome.tabs && chrome.tabs.create) {
+            chrome.tabs.create({ url });
+          } else {
+            window.open(url, '_blank');
+          }
+        }
+      });
+    });
   }
 
   // ===========================================================================

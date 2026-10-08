@@ -290,3 +290,12 @@ To verify real-time synchronization between two users, open two separate Chrome 
 3. Action buttons (**Share Present**, **Import to Attendance**) are safely disabled.
 4. Server `expires_at` is strictly authoritative: if a room expires, attempts to share or import are blocked.
 
+---
+
+## 👨‍💻 Author & Maintainer
+
+* **Bibhuti Kumbhakar**
+* GitHub: [@bibhutideveloper](https://github.com/bibhutideveloper)
+* Repository: [University-Attendance-Automator](https://github.com/bibhutideveloper/University-Attendance-Automator)
+
+
