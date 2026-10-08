@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Automator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-title-row">
+        <div class="logo-icon">✓</div>
+        <h1>Attendance Automator</h1>
+      </div>
+      <div class="header-actions">
+        <button id="settingsBtn" class="icon-btn" title="Supabase Settings">⚙️</button>
+        <div id="connectionBadge" class="badge badge-checking">Checking...</div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="tab-attendance">📝 Attendance</button>
+      <button class="tab-btn" data-tab="tab-share">📤 Share Room</button>
+      <button class="tab-btn" data-tab="tab-receive">📥 Receive Room</button>
+    </nav>
+
+    <!-- Global Notice Banner -->
+    <div id="globalNotice" class="notice-banner" style="display: none;"></div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: ATTENDANCE (Original Working Automation)                       -->
+    <!-- ===================================================================== -->
+    <section id="tab-attendance" class="tab-content active">
+      <!-- Explanation -->
+      <div class="explanation-box">
+        <p>Enter the last 3 digits of the roll numbers to mark Present. All other normal student rows will be marked Absent.</p>
+      </div>
+
+      <!-- Input Form -->
+      <div class="form-group">
+        <div class="form-label-row">
+          <label for="rollInput" class="form-label">Present Roll Numbers</label>
+          <button type="button" id="getPresentBtn" class="btn-chip" title="Extract roll numbers of students currently marked Present on the page">
+            📥 Get from Page
+          </button>
+        </div>
+        <textarea
+          id="rollInput"
+          class="textarea-input"
+          placeholder="18, 3, 103"
+          rows="3"
+          spellcheck="false"
+        ></textarea>
+        
+        <div class="examples-hint">
+          <span class="hint-title">Examples:</span>
+          <code>18, 3 103</code> &bull; <code>005, 018, 103</code>
+        </div>
+      </div>
+
+      <!-- Error Alert -->
+      <div id="errorAlert" class="alert alert-error" style="display: none;"></div>
+
+      <!-- Action Buttons -->
+      <div class="button-group">
+        <button id="applyBtn" class="btn btn-primary">
+          <span class="btn-text">Apply Attendance</span>
+        </button>
+        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      </div>
+
+      <!-- Status & Results Section -->
+      <div class="status-section">
+        <div class="status-header">
+          <span class="status-title" id="statusTitle">Status:</span>
+          <span id="pageNote" class="page-note"></span>
+        </div>
+
+        <div class="status-grid">
+          <div class="stat-card">
+            <span class="stat-label">Students found:</span>
+            <span class="stat-val" id="statStudents">-</span>
+          </div>
+          <div class="stat-card stat-present">
+            <span class="stat-label">Present:</span>
+            <span class="stat-val" id="statPresent">-</span>
+          </div>
+          <div class="stat-card stat-absent">
+            <span class="stat-label">Absent:</span>
+            <span class="stat-val" id="statAbsent">-</span>
+          </div>
+          <div class="stat-card stat-skipped">
+            <span class="stat-label">Skipped:</span>
+            <span class="stat-val" id="statSkipped">-</span>
+          </div>
+        </div>
+
+        <!-- Result Feedback Message -->
+        <div id="resultMessage" class="result-message" style="display: none;"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: SHARE ATTENDANCE (Host)                                        -->
+    <!-- ===================================================================== -->
+    <section id="tab-share" class="tab-content">
+      <div class="card share-setup-card" id="shareSetupCard">
+        <div class="card-title">Create / Update Room</div>
+        <div class="form-group">
+          <label for="shareRoomCode" class="form-label">Room Code</label>
+          <input
+            type="text"
+            id="shareRoomCode"
+            class="text-input"
+            placeholder="e.g. BCA_2A_DBMS"
+            maxlength="30"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span class="field-hint">Alphanumeric, underscores, hyphens (e.g. BCA_2A_DBMS)</span>
+        </div>
+
+        <div class="form-group">
+          <label for="shareExpirySelect" class="form-label">Expiry Duration</label>
+          <select id="shareExpirySelect" class="select-input">
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="15" selected>15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="120">2 hours</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <div id="shareCustomExpiryGroup" class="form-group" style="display: none;">
+          <label for="shareCustomMinutes" class="form-label">Custom Minutes</label>
+          <input type="number" id="shareCustomMinutes" class="text-input" min="1" max="720" value="45" />
+        </div>
+
+        <!-- Room conflict banner -->
+        <div id="shareConflictBox" class="alert alert-warning" style="display: none;">
+          <p id="shareConflictText">Room already active.</p>
+          <div class="conflict-actions">
+            <button id="confirmUpdateBtn" class="btn btn-sm btn-warning">Update Existing Room</button>
+            <button id="cancelConflictBtn" class="btn btn-sm btn-secondary">Cancel</button>
+          </div>
+        </div>
+
+        <div id="shareErrorAlert" class="alert alert-error" style="display: none;"></div>
+
+        <button id="createRoomBtn" class="btn btn-primary w-full">
+          Create / Update Room
+        </button>
+      </div>
+
+      <!-- Active Share Room Dashboard -->
+      <div class="card share-active-card" id="shareActiveCard" style="display: none;">
+        <div class="room-status-header">
+          <div class="room-live-pill" id="shareLivePill">
+            <span class="dot"></span>
+            <span id="shareLiveStatus">Room Active</span>
+          </div>
+          <div class="room-code-tag" id="shareDisplayCode">BCA_2A_DBMS</div>
+        </div>
+
+        <div class="countdown-row">
+          <span class="countdown-label">Expires in:</span>
+          <span class="countdown-val" id="shareCountdown">15:00</span>
+        </div>
+
+        <div class="share-stats-box">
+          <div class="stat-row">
+            <span>Present Students:</span>
+            <strong id="sharePresentCount">0</strong>
+          </div>
+          <div class="stat-row">
+            <span>Last Shared:</span>
+            <span id="shareLastUpdated" class="text-muted">Not shared yet</span>
+          </div>
+        </div>
+
+        <div id="shareActionFeedback" class="alert alert-success" style="display: none;"></div>
+        <div id="shareActionError" class="alert alert-error" style="display: none;"></div>
+
+        <div class="button-group">
+          <button id="sharePresentBtn" class="btn btn-primary" title="Read currently marked Present students from original portal and save to room">
+            📤 Share Present
+          </button>
+          <button id="closeRoomBtn" class="btn btn-danger" title="Close this room and mark it inactive">
+            Close Room
+          </button>
+        </div>
+
+        <button id="leaveHostViewBtn" class="btn btn-link">Change Room Code</button>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: RECEIVE ATTENDANCE (Receiver / Student / Faculty)             -->
+    <!-- ===================================================================== -->
+    <section id="tab-receive" class="tab-content">
+      <div class="card receive-setup-card" id="receiveSetupCard">
+        <div class="card-title">Receive Attendance</div>
+        <div class="form-group">
+          <label for="receiveRoomCode" class="form-label">Room Code</label>
+          <input
+            type="text"
+            id="receiveRoomCode"
+            class="text-input"
+            placeholder="e.g. BCA_2A_DBMS"
+            maxlength="30"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span class="field-hint">Enter the host's room code to listen for real-time updates</span>
+        </div>
+
+        <div id="receiveErrorAlert" class="alert alert-error" style="display: none;"></div>
+
+        <button id="joinRoomBtn" class="btn btn-primary w-full">
+          Join Room
+        </button>
+      </div>
+
+      <!-- Active Joined Room Card -->
+      <div class="card receive-active-card" id="receiveActiveCard" style="display: none;">
+        <div class="room-status-header">
+          <div class="room-live-pill" id="receiveLivePill">
+            <span class="dot"></span>
+            <span id="receiveLiveStatus">Room Active</span>
+          </div>
+          <div class="room-code-tag" id="receiveDisplayCode">BCA_2A_DBMS</div>
+        </div>
+
+        <div class="countdown-row">
+          <span class="countdown-label">Expires in:</span>
+          <span class="countdown-val" id="receiveCountdown">--:--</span>
+        </div>
+
+        <div class="realtime-status-row">
+          <span class="sync-status" id="receiveSyncStatus">⚡ Realtime Connected</span>
+        </div>
+
+        <div class="receive-stats-box">
+          <div class="stat-row">
+            <span>Present Students:</span>
+            <strong id="receivePresentCount">0</strong>
+          </div>
+          <div class="stat-row">
+            <span>Last Updated:</span>
+            <span id="receiveLastUpdated" class="text-muted">Just now</span>
+          </div>
+          <div class="rolls-preview-container">
+            <span class="preview-label">Shared Present Rolls:</span>
+            <div id="receivePreviewRolls" class="rolls-preview">(None yet)</div>
+          </div>
+        </div>
+
+        <div id="receiveActionFeedback" class="alert alert-success" style="display: none;"></div>
+        <div id="receiveActionError" class="alert alert-error" style="display: none;"></div>
+
+        <div class="button-group">
+          <button id="importAttendanceBtn" class="btn btn-primary" title="Copy shared present rolls into attendance input box">
+            📥 Import to Attendance
+          </button>
+          <button id="receiveRefreshBtn" class="btn btn-secondary" title="Manually fetch latest data from Supabase">
+            Get Latest
+          </button>
+        </div>
+
+        <button id="leaveRoomBtn" class="btn btn-link">Leave Room</button>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SETTINGS MODAL (Supabase Credentials)                                 -->
+    <!-- ===================================================================== -->
+    <div id="settingsModal" class="modal-backdrop" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Supabase Configuration</h3>
+          <button id="closeSettingsBtn" class="icon-btn-close">&times;</button>
+        </div>
+        <p class="modal-desc">Configure your Supabase credentials or edit <code>config.js</code> directly.</p>
+        
+        <div class="form-group">
+          <label for="cfgSupabaseUrl" class="form-label">Supabase URL</label>
+          <input type="text" id="cfgSupabaseUrl" class="text-input" placeholder="https://xyz.supabase.co" />
+        </div>
+
+        <div class="form-group">
+          <label for="cfgSupabaseKey" class="form-label">Supabase Anon Key</label>
+          <input type="password" id="cfgSupabaseKey" class="text-input" placeholder="eyJhbGciOi..." />
+        </div>
+
+        <div id="cfgFeedback" class="alert alert-success" style="display: none;"></div>
+
+        <div class="modal-footer">
+          <button id="saveSettingsBtn" class="btn btn-primary">Save Settings</button>
+          <button id="cancelSettingsBtn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safety Footer -->
+    <footer class="footer">
+      <p class="safety-tip">⚠️ Does not submit. Review selections on page before clicking <strong>Mark Attendance</strong>.</p>
+    </footer>
+  </div>
+
+  <!-- Dependencies loaded locally (Manifest V3 compliant) -->
+  <script src="lib/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="services/supabase-service.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

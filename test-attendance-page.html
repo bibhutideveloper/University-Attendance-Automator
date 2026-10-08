@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Attendance Portal - Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    .header-bar {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: white;
+      font-size: 13.5px;
+    }
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+      color: #374151;
+    }
+    th.center, td.center {
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    tr:hover {
+      background-color: #f0fdf4;
+    }
+    .radio-cell {
+      text-align: center;
+    }
+    .radio-cell input[type="radio"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: #2563eb;
+    }
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      align-items: center;
+    }
+    .btn-submit {
+      background-color: #16a34a;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-submit:hover {
+      background-color: #15803d;
+    }
+    .submission-banner {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 6px;
+      background-color: #fee2e2;
+      color: #991b1b;
+      font-weight: bold;
+      text-align: center;
+    }
+    .info-note {
+      background-color: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 10px 15px;
+      font-size: 13px;
+      color: #1e40af;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h2>Academic Portal &bull; Daily Student Attendance</h2>
+    <span>Class: BCA 3rd Sem (AI & ML)</span>
+  </div>
+
+  <div class="info-note">
+    <strong>Test Page Notice:</strong> This page mimics the university attendance table structure to verify the Chrome Extension.
+    Open this file in Google Chrome, click the extension icon, enter roll suffixes like <code>18, 3, 103</code>, and click <strong>Apply Attendance</strong>.
+  </div>
+
+  <div class="card">
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Admission No</th>
+          <th>Sub-Course</th>
+          <th>Sub-Section</th>
+          <th>Student Name</th>
+          <th>Roll No</th>
+          <th class="center">Present</th>
+          <th class="center">Absent</th>
+          <th class="center">Holiday</th>
+          <th class="center">WEEKLY OFF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ADM2025001</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Aarav Sharma</td>
+          <td>SU25BCAGAI001</td>
+          <td class="radio-cell"><input type="radio" name="att_001" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_001" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_001" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_001" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025002</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Ananya Patel</td>
+          <td>SU25BCAGAI002</td>
+          <td class="radio-cell"><input type="radio" name="att_002" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_002" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_002" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_002" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025003</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Bibhuti Kumbhakar</td>
+          <td>SU25BCAGAI003</td>
+          <td class="radio-cell"><input type="radio" name="att_003" value="Present" aria-label="Present" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_003" value="Absent" aria-label="Absent"></td>
+          <td class="radio-cell"><input type="radio" name="att_003" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_003" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025004</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Chirag Jain</td>
+          <td>SU25BCAGAI004</td>
+          <td class="radio-cell"><input type="radio" name="att_004" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_004" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_004" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_004" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025005</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Devendra Yadav</td>
+          <td>SU25BCAGAI005</td>
+          <td class="radio-cell"><input type="radio" name="att_005" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_005" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_005" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_005" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025008</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Harshita Roy</td>
+          <td>SU25BCAGAI008</td>
+          <td class="radio-cell"><input type="radio" name="att_008" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_008" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_008" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_008" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025015</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Jatin Rao</td>
+          <td>SU25BCAGAI015</td>
+          <td class="radio-cell"><input type="radio" name="att_015" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_015" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_015" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_015" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025018</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Ishita Verma</td>
+          <td>SU25BCAGAI018</td>
+          <td class="radio-cell"><input type="radio" name="att_018" value="Present" aria-label="Present" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_018" value="Absent" aria-label="Absent"></td>
+          <td class="radio-cell"><input type="radio" name="att_018" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_018" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025025</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Karan Malhotra</td>
+          <td>SU25BCAGAI025</td>
+          <td class="radio-cell"><input type="radio" name="att_025" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_025" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_025" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_025" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025027</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Lavanya Gupta</td>
+          <td>SU25BCAGAI027</td>
+          <td class="radio-cell"><input type="radio" name="att_027" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_027" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_027" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_027" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025034</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Naveen Kumar</td>
+          <td>SU25BCAGAI034</td>
+          <td class="radio-cell"><input type="radio" name="att_034" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_034" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_034" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_034" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025041</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Meera Nair</td>
+          <td>SU25BCAGAI041</td>
+          <td class="radio-cell"><input type="radio" name="att_041" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_041" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_041" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_041" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+        <tr>
+          <td>ADM2025103</td>
+          <td>BCA (AI & ML)</td>
+          <td>Sec-A</td>
+          <td>Pooja Soni</td>
+          <td>SU25BCAGAI103</td>
+          <td class="radio-cell"><input type="radio" name="att_103" value="Present" aria-label="Present"></td>
+          <td class="radio-cell"><input type="radio" name="att_103" value="Absent" aria-label="Absent" checked></td>
+          <td class="radio-cell"><input type="radio" name="att_103" value="Holiday" aria-label="Holiday"></td>
+          <td class="radio-cell"><input type="radio" name="att_103" value="WEEKLY OFF" aria-label="Weekly Off"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="test-controls" style="margin-top: 15px; padding: 12px; background: #e0f2fe; border-radius: 6px; border: 1px solid #bae6fd;">
+      <strong style="color: #0369a1;">🧪 Two-Profile Realtime Test Simulator:</strong>
+      <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" onclick="setTestPresent([4, 8, 15, 27])" style="padding: 6px 12px; font-size: 12px; cursor: pointer; background: #0284c7; color: white; border: none; border-radius: 4px;">
+          Set Present: [4, 8, 15, 27] (Profile A Test 1)
+        </button>
+        <button type="button" onclick="setTestPresent([4, 8, 15, 27, 34])" style="padding: 6px 12px; font-size: 12px; cursor: pointer; background: #0369a1; color: white; border: none; border-radius: 4px;">
+          Set Present: [4, 8, 15, 27, 34] (Profile A Test 2)
+        </button>
+        <button type="button" onclick="resetAllRadios()" style="padding: 6px 12px; font-size: 12px; cursor: pointer; background: #94a3b8; color: white; border: none; border-radius: 4px;">
+          Reset Radios
+        </button>
+      </div>
+      <span id="simulatorNote" style="display: block; margin-top: 6px; font-size: 11.5px; color: #0284c7;"></span>
+    </div>
+
+    <div class="actions">
+      <span>Verify attendance before submitting:</span>
+      <button id="markAttendanceBtn" class="btn-submit" onclick="handleManualSubmit()">Mark Attendance</button>
+    </div>
+
+    <div id="submitAlert" class="submission-banner">
+      🚨 "Mark Attendance" was clicked MANUALLY by the user. (The automator will never click this button).
+    </div>
+  </div>
+
+  <script>
+    function handleManualSubmit() {
+      const banner = document.getElementById('submitAlert');
+      banner.style.display = 'block';
+      setTimeout(() => {
+        banner.style.display = 'none';
+      }, 5000);
+    }
+
+    function setTestPresent(rollSuffixes) {
+      const suffixSet = new Set(rollSuffixes);
+      const rows = document.querySelectorAll('#attendanceTable tbody tr');
+      rows.forEach(row => {
+        const rollCell = row.cells[4];
+        if (!rollCell) return;
+        const txt = rollCell.textContent.trim();
+        const suffix = parseInt(txt.slice(-3), 10);
+        const pRadio = row.cells[5].querySelector('input[type="radio"]');
+        const aRadio = row.cells[6].querySelector('input[type="radio"]');
+        if (suffixSet.has(suffix)) {
+          if (pRadio) pRadio.checked = true;
+        } else {
+          if (aRadio) aRadio.checked = true;
+        }
+      });
+      const note = document.getElementById('simulatorNote');
+      note.textContent = `Set students [${rollSuffixes.join(', ')}] as Present on the page! (Now click "Share Present" in extension).`;
+    }
+
+    function resetAllRadios() {
+      const radios = document.querySelectorAll('#attendanceTable input[type="radio"]');
+      radios.forEach(r => r.checked = false);
+      const note = document.getElementById('simulatorNote');
+      note.textContent = 'All radios unselected.';
+    }
+  </script>
+</body>
+</html>
